@@ -1,0 +1,4 @@
+interface:
+  display_name: "Progressive Prototype"
+  short_description: "Build complete prototypes with progressive detail"
+  default_prompt: "Use $design-progressive-prototypes to turn this product idea into a complete, progressively detailed prototype."
