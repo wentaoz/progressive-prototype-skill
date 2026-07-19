@@ -20,8 +20,12 @@ Assign each flow an `F-##` ID. Mermaid nodes that represent screens must contain
 
 - an explicit `Start` node;
 - an explicit `Success` or `End` node;
-- decision branches where outcomes diverge;
-- recovery or failure branches when material.
+- labeled decision branches where outcomes diverge;
+- exhaustive outcomes or an explicit `Otherwise` fallback;
+- recovery or failure branches when material;
+- no unreachable nodes, unexplained loops, or non-terminal dead ends.
+
+Write one Mermaid transition per line. Label branches with the canonical `A -->|Outcome| B` form so the validator can audit them deterministically.
 
 Supporting flows may be compact, but every inventoried screen must appear in at least one flow.
 
@@ -35,11 +39,11 @@ Detail only confirmed screens. Start each screen with a `### S-##` heading and i
 
 - decision being tested;
 - editable text wireframe;
-- component or region annotations;
-- actions and resulting screen or state IDs;
+- component or region annotations outside the wireframe;
+- actions and resulting screen or state IDs outside the wireframe;
 - rules and deliberately deferred detail.
 
-Keep the first artifact to two or three detailed screens. Text wireframes express hierarchy, not pixel measurements.
+Keep the first artifact to two or three detailed screens. Text wireframes express hierarchy, not pixel measurements. A wireframe may contain only text, data, labels, validation, feedback, and help that an end user should actually see. Never put page explanations, design rationale, business rules, decision IDs, fidelity labels, or prototype annotations inside it.
 
 ## 7. State Coverage
 
@@ -48,6 +52,14 @@ For every screen, mark loading, empty, error, permission, recovery, and success 
 ## 8. Decisions and Change Impact
 
 List open and resolved decisions separately. On revision, append a compact change-impact row containing the date, request, affected IDs, conflicts resolved, and any follow-up decision.
+
+Add a `Logic audit` row for every flow. Verify reachable start, success/end, complete branches, material failure/recovery, zero non-terminal dead ends, and a final `Pass`. Do not mark a flow as passing when an open decision leaves a missing outcome.
+
+For visual output, add a `Presentation audit` that passes all three gates: user-visible copy only inside screens, all screens and states tiled, and interaction notes outside screens.
+
+## Logic completion gate
+
+Before handoff, cross-check Mermaid edges, screen inventory entry/primary actions, detailed-screen outcomes, state coverage, and external interaction notes. Every actionable control must resolve to another visible screen/state, a terminal outcome, or an explicit stay/retry behavior. Every async or failure-prone action must show success, failure, and recovery or record why a branch is not applicable.
 
 ## Detail selection
 

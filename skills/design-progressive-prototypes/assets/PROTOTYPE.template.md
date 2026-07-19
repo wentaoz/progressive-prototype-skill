@@ -59,6 +59,8 @@ flowchart LR
 
 **Decision being tested:**
 
+The wireframe below may contain only text that the end user should see. Keep explanations and rules outside it.
+
 ```text
 +--------------------------------------------------+
 | [Page title]                                     |
@@ -69,15 +71,11 @@ flowchart LR
 +--------------------------------------------------+
 ```
 
-**Annotations**
+**Interaction notes — outside the screen**
 
-1.
-
-**Actions and outcomes**
-
-| Action | Result |
-|---|---|
-| | |
+| ID | Trigger | Condition | Result | Failure/recovery |
+|---|---|---|---|---|
+| I-01 | | | | |
 
 **Rules and deferred detail**
 
@@ -106,6 +104,20 @@ flowchart LR
 
 | Date | Request | Affected IDs | Conflicts resolved | Follow-up |
 |---|---|---|---|---|
+
+### Logic audit
+
+| Flow | Reachable start | Success/end | Branch coverage | Failure/recovery | Non-terminal dead ends | Result |
+|---|---|---|---|---|---|---|
+| F-01 | Pending | Pending | Pending | Pending | Pending | Pending |
+
+### Presentation audit
+
+| Check | Result | Evidence |
+|---|---|---|
+| User-visible copy only inside screens | Pending | |
+| All screens and states tiled | Pending | |
+| Interaction notes outside screens | Pending | |
 
 ### Visual outputs
 

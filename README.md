@@ -15,7 +15,10 @@
 - 每轮最多提出三个高影响问题，只细化确认过的 2–3 个页面。
 - 输出 Git diff 友好的 `PROTOTYPE.md`、原生 Figma 或 Pencil `.pen`。
 - Figma 使用独立 Frame、Auto Layout、Text、组件实例、Variant、变量和原生交互，不交付整屏截图或单一 Vector。
-- Pencil 使用独立节点、reusable nodes/refs 和变量，并通过 `--in` 基于旧文件局部迭代。
+- Pencil 使用独立节点、reusable nodes/refs 和变量，并通过原生节点更新或安全的 `--in` 候选文件局部迭代。
+- 屏内只允许终端用户应该看到的文案；页面说明、产品规则、设计理由和交互规则必须放在屏外备注中。
+- 所有页面和关键状态在画布上平铺展示，主流程从左到右，异常与恢复状态放在所属页面下方。
+- 每条流程必须通过逻辑审计：可达入口、成功出口、完整分支、失败恢复以及零非终点死路。
 - 修改时按 `F-##`、`S-##` 追踪影响，不重写无关页面，也不覆盖无冲突的人工视觉调整。
 
 ### 输出策略
@@ -23,8 +26,8 @@
 | 输出 | 默认行为 |
 |---|---|
 | Document | 完整结构、Mermaid 流程、状态矩阵和文本线框 |
-| Figma | 所有页面保留独立骨架，确认页面达到中保真，核心流程和关键异常可点击 |
-| Pencil | 与 Figma 相同的渐进式覆盖，保存 `.pen` 和 PNG 预览 |
+| Figma | 页面和状态全部平铺，交互规则写在屏外；确认页面达到中保真，原生交互仅作补充 |
+| Pencil | 与 Figma 相同的平铺和屏外备注规则，保存 `.pen` 和 PNG 预览 |
 
 视觉文件默认优先复用已有设计系统；目标文件没有合适组件时，才创建最小本地组件和变量。
 
@@ -84,7 +87,10 @@ Its rule is simple: **complete in structure, detailed only where a decision need
 - Asks no more than three high-impact questions and details only two or three confirmed screens initially.
 - Produces `PROTOTYPE.md`, native Figma, or Pencil `.pen` output.
 - Keeps Figma screens as separate Frames using Auto Layout, Text, Instances, Variants, Variables, and native reactions—never a whole-screen bitmap or vector.
-- Keeps Pencil screens as separate nodes with reusable nodes/refs and variables, then revises through `--in`.
+- Keeps Pencil screens as separate nodes with reusable nodes/refs and variables, then revises through native node updates or safe `--in` candidate files.
+- Allows only end-user-facing copy inside screens; page explanations, product rules, design rationale, and interaction rules stay in external notes.
+- Tiles every screen and material state on the canvas, with the primary path left to right and alternate states below their owner.
+- Requires every flow to pass a logic audit for reachability, terminal outcome, complete branches, failure/recovery, and non-terminal dead ends.
 - Traces revisions through stable `F-##` and `S-##` IDs while preserving unrelated manual visual changes.
 
 ### Install

@@ -1,11 +1,11 @@
 ---
 name: design-progressive-prototypes
-description: Turn a product idea, PRD, requirements note, or existing prototype feedback into a structurally complete, progressively detailed product prototype in Markdown, editable Figma, or Pencil .pen format. Use when defining, reviewing, generating, or revising product scope, user flows, screen inventories, interface states, low- or mid-fidelity wireframes, clickable core flows, design-system-based Figma screens, Pencil files, or prototype change impact—especially when ordinary AI prototypes are too vague, too detailed, flattened, or difficult to edit locally.
+description: Turn a product idea, PRD, requirements note, or existing prototype feedback into a structurally complete, progressively detailed product prototype in Markdown, editable Figma, or Pencil .pen format. Use when defining, reviewing, generating, or revising product scope, user flows, screen inventories, interface states, low- or mid-fidelity wireframes, tiled annotated canvases, design-system-based Figma screens, Pencil files, or prototype change impact—especially when ordinary AI prototypes are too vague, too detailed, logically incomplete, polluted with internal explanatory copy, flattened, or difficult to edit locally.
 ---
 
 # Design Progressive Prototypes
 
-Create one product model at several levels of detail: complete at the structural level, detailed only where a decision requires it. Keep the user's attention on product decisions and produce visual files as native, locally editable layers rather than flattened pictures.
+Create one product model at several levels of detail: complete at the structural level, detailed only where a decision requires it. Produce native, locally editable layers on a fully tiled review canvas. Keep internal explanations outside user-facing screens and do not hand off a prototype with unresolved logic gaps.
 
 ## Load the relevant contracts
 
@@ -46,7 +46,7 @@ Show a concise preview containing:
 3. Core and supporting flows with stable `F-##` IDs
 4. Complete screen inventory with stable `S-##` IDs
 5. Relevant loading, empty, error, permission, and recovery states
-6. Uncertain assumptions and contradictions
+6. Explicit branch outcomes, recovery destinations, and uncertain assumptions
 
 Do not include visual styling, final copy, or detailed wireframes in the skeleton.
 
@@ -56,7 +56,7 @@ Score candidate screens by decision value, usage frequency, and design risk. Rec
 
 ### 4. Write the semantic artifact
 
-After confirmation, create `PROTOTYPE.md` in the requested location or the current project root. Preserve the exact level-one and level-two headings from the template. Use Mermaid for flows, compact tables for inventories, editable text for wireframes, semantic behavior descriptions, and stable IDs.
+After confirmation, create `PROTOTYPE.md` in the requested location or the current project root. Preserve the exact level-one and level-two headings from the template. Use Mermaid for flows, compact tables for inventories, editable text for wireframes, semantic behavior descriptions, and stable IDs. Put only copy that an end user should see inside each wireframe. Keep page purpose, design rationale, assumptions, business rules, state labels, and interaction explanations in the document outside the wireframe.
 
 Do not add detailed screens beyond the confirmed set. Mark deliberately deferred detail instead of inventing it.
 
@@ -68,7 +68,7 @@ python3 <skill-directory>/scripts/validate_prototype.py --initial <path-to-PROTO
 
 ### 5. Generate the selected visual target
 
-Generate visual output only after the semantic artifact is valid. Create an outline frame for every inventoried screen, but raise only the confirmed two or three screens to mid fidelity. Make the core flow and material failure paths clickable where the target supports interactions.
+Generate visual output only after the semantic artifact is valid. Create an outline frame for every inventoried screen, but raise only the confirmed two or three screens to mid fidelity. Tile every screen and material state on the canvas so reviewers can see the complete flow without clicking. Place interaction notes outside screen frames and record trigger, condition, destination, failure, and recovery. Native interactions may supplement the notes but must never be the only representation of logic.
 
 After generation, add or update the `Visual outputs` row in `PROTOTYPE.md`, then validate it with:
 
@@ -92,8 +92,12 @@ For later revisions, omit `--initial` so explicitly confirmed detail can grow be
 ## Control detail and editability
 
 - Ensure every core product goal maps to at least one flow.
-- Give every flow a start, successful end, and applicable alternate or failure path.
+- Give every flow a reachable start, successful end, exhaustive labeled branches, and applicable failure and recovery paths.
 - Reference every screen from a flow and cover its applicable states.
+- Give every non-terminal screen or state an exit. Reject unreachable screens, unexplained loops, and dead ends.
+- Keep internal prototype text outside screens. Screen children may contain only copy, data, labels, feedback, and help that an end user should actually see.
+- Tile all screens and states with visible gaps. Keep interaction notes as separate sibling annotations, never as children of a user-facing screen.
+- Require the Logic audit and, for visual output, the Presentation audit to pass before handoff. If a core open decision prevents a complete path, stop and resolve or explicitly defer that flow instead of claiming it passes.
 - Keep the initial detailed set to at most three screens.
 - Prefer components, variables, styles, Auto Layout, reusable nodes, and editable text over duplicated primitives.
 - Never deliver a whole screen as a screenshot, single vector, or indivisible group.

@@ -83,17 +83,13 @@ flowchart LR
 +--------------------------------------------------+
 ```
 
-**Annotations**
+**Interaction notes — outside the screen**
 
-1. Changing service refreshes availability without losing the chosen date.
-2. Unavailable times are omitted rather than shown as tappable controls.
-
-**Actions and outcomes**
-
-| Action | Result |
-|---|---|
-| Select an available time and continue | Open S-02 with the slot held |
-| Retry after availability error | Reload S-01 availability |
+| ID | Trigger | Condition | Result | Failure/recovery |
+|---|---|---|---|---|
+| I-01 | Change service | A service is selected | Refresh S-01 availability without losing the date | Show S-01 error; Retry reloads availability |
+| I-02 | Select a time and continue | The time is available | Open S-02 with the slot held | If availability changed, keep S-01 visible and ask for another time |
+| I-03 | Change date | Previous or next date exists | Refresh the tiled S-01 default state | Empty results show the tiled S-01 empty state |
 
 **Rules and deferred detail**
 
@@ -116,17 +112,12 @@ flowchart LR
 +--------------------------------------------------+
 ```
 
-**Annotations**
+**Interaction notes — outside the screen**
 
-1. The selected slot remains visible and editable.
-2. Inline validation appears after field blur and on submission.
-
-**Actions and outcomes**
-
-| Action | Result |
-|---|---|
-| Confirm while slot is available | Open S-03 |
-| Confirm after slot expires | Return to S-01 with a recovery message |
+| ID | Trigger | Condition | Result | Failure/recovery |
+|---|---|---|---|---|
+| I-04 | Change selection | A slot is held | Return to S-01 with the current service and date | If refresh fails, show the tiled S-01 error state |
+| I-05 | Confirm | Contact fields are valid and the slot is available | Open the tiled S-03 success state | Invalid fields show S-02 validation; expired slot opens the tiled S-01 recovery state |
 
 **Rules and deferred detail**
 
@@ -161,8 +152,22 @@ flowchart LR
 |---|---|---|---|---|
 | 2026-07-19 | Establish initial example | F-01, S-01, S-02, S-03 | Guest booking removed account dependency | Resolve D-01 and D-02 |
 
+### Logic audit
+
+| Flow | Reachable start | Success/end | Branch coverage | Failure/recovery | Non-terminal dead ends | Result |
+|---|---|---|---|---|---|---|
+| F-01 | Covered from START | Covered at SUCCESS through S-03 | Slot available/taken and input validation are explicit | Availability, validation, expiry, and retry paths return to visible states | None | Pass |
+
+### Presentation audit
+
+| Check | Result | Evidence |
+|---|---|---|
+| User-visible copy only inside screens | Pass | Wireframes contain product UI copy; rationale and rules remain outside |
+| All screens and states tiled | Pass | Default, success, loading, empty, error, validation, and recovery destinations are specified as visible frames |
+| Interaction notes outside screens | Pass | I-01 through I-05 are documented outside the wireframes |
+
 ### Visual outputs
 
 | Target | Location | Status/version | Detailed screens | Updated |
 |---|---|---|---|---|
-| Document | ./PROTOTYPE.md | v0.2 example | S-01, S-02 | 2026-07-19 |
+| Document | ./PROTOTYPE.md | v0.2.1 example | S-01, S-02 | 2026-07-19 |

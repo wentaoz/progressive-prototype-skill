@@ -30,12 +30,15 @@ Tell the user generation can take several minutes. Show the exported preview aft
 
 - Create every screen as a separate top-level frame named `S-## / Screen name / State`.
 - Keep all inventoried screens as editable outlines and only confirmed screens at mid fidelity.
+- Tile the primary path left to right with visible gaps and place alternate/material states in a row below the owning screen. Never overlap or hide a destination.
 - Use variables for shared visual values.
 - Use reusable nodes and refs for repeated controls and regions.
 - Keep text as text nodes and images as replaceable image fills on dedicated frames.
 - Preserve `S-##` and region IDs in node names for later search and updates.
+- Keep only end-user-facing copy inside screen frames. Put purpose, rationale, business rules, raw state/fidelity labels, IDs, and prototype explanations in metadata or separate external annotation frames.
+- Create sibling annotation frames named `I-## / Trigger / Destination` with editable text for trigger, precondition, result, failure, and recovery. Never nest them inside screens.
 
-If the active `.pen` schema has no native interaction or connection nodes, represent destinations with separate state frames and explicit action metadata. Report that limitation instead of claiming the flow is natively clickable.
+If the active `.pen` schema has no native interaction or connection nodes, use the tiled state frames, external `I-##` notes, and action metadata as the interaction specification. Report that limitation instead of claiming the flow is natively clickable.
 
 ## Update
 
@@ -52,8 +55,11 @@ When the desktop editor is connected:
 1. Read all top-level screen frames and reusable nodes in batched queries.
 2. Confirm every inventoried `S-##` exists exactly once per intended state.
 3. Confirm repeated controls use reusable nodes or refs.
-4. Run `snapshot_layout` with `problemsOnly: true` for clipping and overlap.
-5. Screenshot each detailed screen and material state.
-6. After an update, compare unaffected top-level identities and named properties to confirm preservation. Treat descendant IDs as implementation details unless the reopened file proves them stable.
+4. Confirm every screen and material state is tiled, visible, and non-overlapping.
+5. Read all Text descendants inside screen frames and remove internal/product/design explanations.
+6. Confirm every actionable transition has a sibling `I-##` note with a valid visible destination or terminal/stay result.
+7. Run `snapshot_layout` with `problemsOnly: true` for clipping and overlap.
+8. Screenshot the full flow plus each detailed screen and material state.
+9. After an update, compare unaffected top-level identities and named properties to confirm preservation. Treat descendant IDs as implementation details unless the reopened file proves them stable.
 
 When only CLI is available, export and inspect the preview but report structural validation as unavailable. Do not infer native editability from the PNG alone.

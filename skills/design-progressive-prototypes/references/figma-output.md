@@ -26,8 +26,8 @@ If an unrelated page already owns one of these names, append ` (Progressive Prot
 
 Use namespace `progressivePrototype` with these keys:
 
-- `kind`: `page`, `flow`, `screen`, `state`, `region`, or `component`
-- `semanticId`: `F-##`, `S-##`, or a region ID
+- `kind`: `page`, `flow`, `screen`, `state`, `region`, `component`, or `interaction-note`
+- `semanticId`: `F-##`, `S-##`, a region ID, or `I-##`
 - `sourceVersion`: the prototype updated date or revision identifier
 
 ## Build editable foundations
@@ -43,15 +43,19 @@ Use namespace `progressivePrototype` with these keys:
 
 - Create every inventoried screen as its own top-level Frame inside the relevant flow Section.
 - Name frames `S-## / Screen name / State`.
-- Build outline screens with labeled regions and primary actions, not polished UI.
+- Build outline screens with semantically named layers and user-facing primary actions, not visible designer labels or polished UI.
 - Build confirmed screens section by section with Auto Layout containers and component instances.
-- Put page-level Loading, Empty, Error, Permission, and Recovery states beside the Default frame.
+- Tile the primary path left to right with fixed visible gaps. Put Loading, Empty, Error, Permission, and Recovery frames in a second row below their owning Default frame.
+- Keep all destinations visible. Represent runtime overlays as separate tiled state Frames for review.
+- Put only end-user-facing text inside each screen Frame. Keep screen names, raw state/fidelity labels, IDs, decision rationale, business rules, and prototype explanations in Figma layer names, shared data, or external annotations.
 - Set semantic shared data on screen frames and major regions.
 - Return every created or mutated node ID from each call.
 
-## Add interactions
+## Annotate interactions
 
-Use native reactions for the core flow and material recovery paths. Prefer `ON_CLICK` navigation, overlays, and component `CHANGE_TO` reactions. Do not create interactions for decorative or deferred controls. Keep prototype destinations within the same page when possible.
+Create separate sibling annotation Frames beside or below the related screen. Name them `I-## / Trigger / Destination`, set `kind=interaction-note`, and include trigger, precondition, result, failure, and recovery as editable Text. Never append an annotation Frame as a child of a user-facing screen.
+
+Use native reactions only as a supplement for the core flow and material recovery paths. Prefer `ON_CLICK` navigation, overlays, and component `CHANGE_TO` reactions. Do not create interactions for decorative or deferred controls. Keep destinations within the tiled page, ensure every reaction matches an `I-##` note, and never add a hidden destination.
 
 ## Never flatten the final output
 
@@ -70,7 +74,11 @@ Use metadata and targeted read-only scripts to verify:
 - detailed screens contain Auto Layout Frames, editable Text, and component Instances;
 - repeated local controls remain Components or Instances;
 - shared variables or imported design-system bindings exist;
-- core controls contain native reactions;
+- any native reactions exactly match the external interaction notes;
 - semantic shared data is present and unique.
+- every screen and material state has a non-overlapping canvas position and is visible without presentation playback;
+- every action transition has an external `I-##` note with a valid destination or explicit terminal/stay result;
+- no interaction note or internal design explanation is a descendant of a screen Frame;
+- every Text descendant inside a screen is justified as user-facing copy.
 
-Use screenshots of each detailed screen and material state to check clipping, overlap, placeholder text, hierarchy, and readability. Fix only the broken subtree and revalidate.
+Use screenshots of the full tiled flow plus each detailed screen and material state. Check copy hygiene, note placement, clipping, overlap, hierarchy, and readability. Compare reactions against notes and fail validation on orphan frames, dead ends, or contradictory destinations. Fix only the broken subtree and revalidate.

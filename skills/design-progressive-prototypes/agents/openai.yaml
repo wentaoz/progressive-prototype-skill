@@ -1,4 +1,4 @@
 interface:
   display_name: "Progressive Prototype"
-  short_description: "Build editable Figma, Pencil, or document prototypes"
-  default_prompt: "Use $design-progressive-prototypes to turn this product idea into a complete, progressively detailed and locally editable prototype."
+  short_description: "Build tiled, editable, logic-checked prototypes"
+  default_prompt: "Use $design-progressive-prototypes to turn this product idea into a complete, tiled, locally editable prototype with user-facing screen copy, external interaction notes, and validated flow logic."
