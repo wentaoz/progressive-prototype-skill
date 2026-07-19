@@ -51,6 +51,20 @@ class ValidatePrototypeTests(unittest.TestCase):
         result = validator.validate_text(text)
         self.assertFalse(any("maximum is 3" in item for item in result.errors))
 
+    def test_visual_target_requires_matching_output_row(self) -> None:
+        text = EXAMPLE.read_text(encoding="utf-8")
+        result = validator.validate_text(text, visual_target="figma")
+        self.assertTrue(any("no Figma row" in item for item in result.errors))
+
+    def test_visual_target_accepts_usable_location(self) -> None:
+        text = EXAMPLE.read_text(encoding="utf-8").replace(
+            "| Document | ./PROTOTYPE.md | v0.2 example | S-01, S-02 | 2026-07-19 |",
+            "| Document | ./PROTOTYPE.md | v0.2 example | S-01, S-02 | 2026-07-19 |\n"
+            "| Figma | https://figma.com/design/test | Current | S-01, S-02 | 2026-07-19 |",
+        )
+        result = validator.validate_text(text, visual_target="figma")
+        self.assertEqual((), result.errors)
+
 
 if __name__ == "__main__":
     unittest.main()

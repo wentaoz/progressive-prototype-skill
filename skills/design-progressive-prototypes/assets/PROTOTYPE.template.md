@@ -106,3 +106,9 @@ flowchart LR
 
 | Date | Request | Affected IDs | Conflicts resolved | Follow-up |
 |---|---|---|---|---|
+
+### Visual outputs
+
+| Target | Location | Status/version | Detailed screens | Updated |
+|---|---|---|---|---|
+| Document | ./PROTOTYPE.md | Current | S-01 | YYYY-MM-DD |

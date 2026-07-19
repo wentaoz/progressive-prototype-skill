@@ -160,3 +160,9 @@ flowchart LR
 | Date | Request | Affected IDs | Conflicts resolved | Follow-up |
 |---|---|---|---|---|
 | 2026-07-19 | Establish initial example | F-01, S-01, S-02, S-03 | Guest booking removed account dependency | Resolve D-01 and D-02 |
+
+### Visual outputs
+
+| Target | Location | Status/version | Detailed screens | Updated |
+|---|---|---|---|---|
+| Document | ./PROTOTYPE.md | v0.2 example | S-01, S-02 | 2026-07-19 |

@@ -1,23 +1,31 @@
 ---
 name: design-progressive-prototypes
-description: Turn a product idea, PRD, requirements note, or existing prototype feedback into a structurally complete, progressively detailed product prototype. Use when defining, reviewing, or revising product scope, user flows, screen inventories, interface states, low-fidelity wireframes, or prototype change impact—especially when ordinary AI prototypes are either too vague to evaluate or too detailed to understand and edit.
+description: Turn a product idea, PRD, requirements note, or existing prototype feedback into a structurally complete, progressively detailed product prototype in Markdown, editable Figma, or Pencil .pen format. Use when defining, reviewing, generating, or revising product scope, user flows, screen inventories, interface states, low- or mid-fidelity wireframes, clickable core flows, design-system-based Figma screens, Pencil files, or prototype change impact—especially when ordinary AI prototypes are too vague, too detailed, flattened, or difficult to edit locally.
 ---
 
 # Design Progressive Prototypes
 
-Create one product model at several levels of detail: complete at the structural level, detailed only where a decision requires it. Keep the user's attention on product decisions instead of decorative output.
+Create one product model at several levels of detail: complete at the structural level, detailed only where a decision requires it. Keep the user's attention on product decisions and produce visual files as native, locally editable layers rather than flattened pictures.
 
-## Load the contract
+## Load the relevant contracts
 
-Read [references/prototype-contract.md](references/prototype-contract.md) before drafting or changing a prototype. Use [assets/PROTOTYPE.template.md](assets/PROTOTYPE.template.md) as the output skeleton.
+Always read [references/prototype-contract.md](references/prototype-contract.md). Use [assets/PROTOTYPE.template.md](assets/PROTOTYPE.template.md) as the semantic artifact skeleton.
 
-## Choose the workflow
+For visual output, also read [references/visual-output-contract.md](references/visual-output-contract.md), then read exactly one target workflow:
 
-- **New prototype:** Accept a short idea or existing product material, then run the framing and skeleton checkpoints before writing a file.
-- **Revise a prototype:** Read the existing `PROTOTYPE.md`, classify the requested change, trace affected flow and screen IDs, and update only affected sections.
-- **Review only:** Diagnose gaps, excessive detail, contradictions, and missing states without writing unless the user also asks for changes.
+- [references/figma-output.md](references/figma-output.md) for Figma
+- [references/pencil-output.md](references/pencil-output.md) for Pencil
 
-Follow the user's output language. Keep IDs, file names, and Mermaid syntax in ASCII.
+## Route the request
+
+- **Document:** Create or revise `PROTOTYPE.md` only.
+- **Figma:** Create or revise `PROTOTYPE.md`, then create or update an editable Figma design file.
+- **Pencil:** Create or revise `PROTOTYPE.md`, then create or update an editable `.pen` file and preview.
+- **Review only:** Diagnose structural gaps, excessive detail, flattening, contradictions, and missing states without writing unless the user asks for changes.
+
+Use the target explicitly named by the user. If the user requests a visual prototype without naming a target, prefer Figma when its tools are connected; otherwise offer Pencil, then document-only output. Never silently substitute a target.
+
+Follow the user's output language. Keep IDs, file names, layer names, shared-data keys, and Mermaid syntax in ASCII.
 
 ## Create a new prototype
 
@@ -25,9 +33,9 @@ Follow the user's output language. Keep IDs, file names, and Mermaid syntax in A
 
 Extract the primary user, problem, desired outcome, must-have scope, non-goals, constraints, and assumptions from available material. Discover facts from supplied files before asking the user.
 
-Ask only questions that change scope, a core flow, or a major constraint. Ask no more than three questions in one checkpoint. If the user explicitly asks to skip checkpoints, record reasonable assumptions and continue.
+Ask only questions that change scope, a core flow, platform, or a major constraint. Ask no more than three questions in one checkpoint. If the user explicitly asks to skip checkpoints, record reasonable assumptions and continue.
 
-Do not create `PROTOTYPE.md` during this step.
+Do not create artifacts during this step.
 
 ### 2. Present the minimum complete skeleton
 
@@ -46,45 +54,52 @@ Do not include visual styling, final copy, or detailed wireframes in the skeleto
 
 Score candidate screens by decision value, usage frequency, and design risk. Recommend two or three screens for detailed treatment and state why each matters. Wait for confirmation before expanding them unless the user explicitly waived checkpoints.
 
-### 4. Write the artifact
+### 4. Write the semantic artifact
 
-After confirmation, create `PROTOTYPE.md` in the requested location or the current project root. Preserve the exact level-one and level-two headings from the template. Use:
-
-- Mermaid for flows
-- Compact tables for inventories and state coverage
-- Editable monospace text for low-fidelity wireframes
-- Semantic descriptions for behavior and constraints
-- Stable IDs for flows, screens, states, and decisions
+After confirmation, create `PROTOTYPE.md` in the requested location or the current project root. Preserve the exact level-one and level-two headings from the template. Use Mermaid for flows, compact tables for inventories, editable text for wireframes, semantic behavior descriptions, and stable IDs.
 
 Do not add detailed screens beyond the confirmed set. Mark deliberately deferred detail instead of inventing it.
 
-### 5. Validate
-
-For a new prototype, run:
+For a new artifact, validate with:
 
 ```bash
 python3 <skill-directory>/scripts/validate_prototype.py --initial <path-to-PROTOTYPE.md>
 ```
 
-For a later revision, omit `--initial` so explicitly confirmed detail can grow beyond the first three screens.
+### 5. Generate the selected visual target
 
-Fix validation errors before handing off. Report warnings as explicit limitations rather than silently expanding scope.
+Generate visual output only after the semantic artifact is valid. Create an outline frame for every inventoried screen, but raise only the confirmed two or three screens to mid fidelity. Make the core flow and material failure paths clickable where the target supports interactions.
+
+After generation, add or update the `Visual outputs` row in `PROTOTYPE.md`, then validate it with:
+
+```bash
+python3 <skill-directory>/scripts/validate_prototype.py --visual-target <figma-or-pencil> <path-to-PROTOTYPE.md>
+```
+
+Show the resulting Figma URL or `.pen` path and a visual preview. Report structural validation separately from visual validation.
 
 ## Revise an existing prototype
 
 Classify the request before editing:
 
-- **Local:** Copy, label, ordering, or behavior contained within one screen. Apply it directly, validate, and summarize the affected IDs.
-- **Structural:** Authentication, permissions, payment, navigation, data lifecycle, adding or removing screens, or changing a flow outcome. First show the affected flows, screens, states, and decisions; wait for confirmation, then edit.
+- **Local:** Copy, label, ordering, styling, or behavior contained within one screen or component. Apply it directly, validate, and summarize affected IDs.
+- **Structural:** Authentication, permissions, payment, navigation, data lifecycle, adding or removing screens, or changing a flow outcome. First show affected flows, screens, states, and decisions; wait for confirmation, then edit.
 
-Keep unrelated sections byte-stable when practical. Update the change-impact table with the date, request, affected IDs, and resolved conflicts. Never regenerate the entire document merely to make a local change.
+Treat `PROTOTYPE.md` as the product-semantics source. Inspect the existing visual file before every visual update. Preserve manual visual changes that do not conflict with the requested semantic change. Locate nodes through semantic IDs, mutate only affected nodes, and never regenerate an entire file for a local change.
 
-## Control detail
+For later revisions, omit `--initial` so explicitly confirmed detail can grow beyond the first three screens. Update the change-impact and Visual outputs tables after successful writes.
+
+## Control detail and editability
 
 - Ensure every core product goal maps to at least one flow.
 - Give every flow a start, successful end, and applicable alternate or failure path.
 - Reference every screen from a flow and cover its applicable states.
 - Keep the initial detailed set to at most three screens.
-- Prefer annotations and constraints over polished copy or visual decoration.
+- Prefer components, variables, styles, Auto Layout, reusable nodes, and editable text over duplicated primitives.
+- Never deliver a whole screen as a screenshot, single vector, or indivisible group.
 - Surface assumptions; do not disguise guesses as settled requirements.
 - Stop expanding when more detail would not help the next product decision.
+
+## Handle unavailable tools
+
+If Figma is unavailable or not writable, explain the missing connection or permission and offer Pencil or document-only output. If Pencil is missing or unauthenticated, provide the required installation or login step and offer Figma or document-only output. Do not claim a visual file is structurally validated when only a preview image was inspected.

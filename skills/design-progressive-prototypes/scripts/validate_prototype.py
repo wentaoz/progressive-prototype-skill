@@ -21,6 +21,7 @@ REQUIRED_HEADINGS = [
     "## 8. Decisions and Change Impact",
 ]
 PLACEHOLDERS = ("[Product name]", "[language]", "[Core flow name]", "[Screen name]")
+VISUAL_TARGETS = ("figma", "pencil")
 
 
 @dataclass(frozen=True)
@@ -48,7 +49,12 @@ def _table_ids(section: str, prefix: str) -> list[str]:
     return re.findall(pattern, section, flags=re.MULTILINE)
 
 
-def validate_text(text: str, *, initial: bool = False) -> ValidationResult:
+def validate_text(
+    text: str,
+    *,
+    initial: bool = False,
+    visual_target: str | None = None,
+) -> ValidationResult:
     errors: list[str] = []
     warnings: list[str] = []
 
@@ -64,6 +70,7 @@ def validate_text(text: str, *, initial: bool = False) -> ValidationResult:
     inventory = _section(text, "## 5. Screen Inventory")
     details = _section(text, "## 6. Detailed Screens")
     states = _section(text, "## 7. State Coverage")
+    decisions = _section(text, "## 8. Decisions and Change Impact")
 
     if flows and "```mermaid" not in flows:
         errors.append("User Flows must contain at least one Mermaid diagram")
@@ -103,11 +110,38 @@ def validate_text(text: str, *, initial: bool = False) -> ValidationResult:
     if "deferred" not in text.lower() and "延后" not in text and "暂缓" not in text:
         warnings.append("No deferred detail is recorded; verify that the artifact is not over-specified")
 
+    if visual_target is not None:
+        target = visual_target.lower()
+        if target not in VISUAL_TARGETS:
+            errors.append(f"Unsupported visual target: {visual_target}")
+        if "### Visual outputs" not in decisions:
+            errors.append("Visual output validation requires a '### Visual outputs' table")
+        else:
+            rows = re.findall(
+                r"^\|\s*(Figma|Pencil)\s*\|\s*([^|]+)\|\s*([^|]+)\|",
+                decisions,
+                flags=re.MULTILINE | re.IGNORECASE,
+            )
+            matching = [row for row in rows if row[0].lower() == target]
+            if not matching:
+                errors.append(f"Visual outputs table has no {target.title()} row")
+            elif any(row[1].strip() in {"", "-", "TBD"} for row in matching):
+                errors.append(f"Visual outputs table has no usable {target.title()} location")
+
     return ValidationResult(tuple(errors), tuple(warnings))
 
 
-def validate_file(path: Path, *, initial: bool = False) -> ValidationResult:
-    return validate_text(path.read_text(encoding="utf-8"), initial=initial)
+def validate_file(
+    path: Path,
+    *,
+    initial: bool = False,
+    visual_target: str | None = None,
+) -> ValidationResult:
+    return validate_text(
+        path.read_text(encoding="utf-8"),
+        initial=initial,
+        visual_target=visual_target,
+    )
 
 
 def main() -> int:
@@ -118,13 +152,22 @@ def main() -> int:
         action="store_true",
         help="Enforce the initial limit of no more than three detailed screens",
     )
+    parser.add_argument(
+        "--visual-target",
+        choices=VISUAL_TARGETS,
+        help="Require a usable row for the generated visual target",
+    )
     args = parser.parse_args()
 
     if not args.prototype.is_file():
         print(f"ERROR: file not found: {args.prototype}")
         return 2
 
-    result = validate_file(args.prototype, initial=args.initial)
+    result = validate_file(
+        args.prototype,
+        initial=args.initial,
+        visual_target=args.visual_target,
+    )
     for warning in result.warnings:
         print(f"WARNING: {warning}")
     for error in result.errors:
